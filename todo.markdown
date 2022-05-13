@@ -1,0 +1,3 @@
+- [ ] скопировать на github 
+- [ ] заменить write на binary.Write
+- [ ] возвращать ошибки в encoding и decode вместо паники
