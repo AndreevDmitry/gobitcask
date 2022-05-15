@@ -1,4 +1,4 @@
-module github.com/AndreevDmitriy/gobitcask
+module github.com/AndreevDmitry/gobitcask
 
 go 1.18
 
