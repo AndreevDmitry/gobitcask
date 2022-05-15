@@ -1,9 +1,8 @@
 package gobitcask
 
 import (
-	"bytes"
 	"encoding/binary"
-	"fmt"
+	"io"
 )
 
 type Record struct {
@@ -11,7 +10,7 @@ type Record struct {
 	Value string
 }
 
-func Encode(buffer *bytes.Buffer, key string, value string) {
+func Encode(buffer io.Writer, key string, value string) {
 	keySize := uint64(len(key))
 	valueSize := uint64(len(value))
 	binary.Write(buffer, binary.LittleEndian, keySize)
@@ -19,30 +18,31 @@ func Encode(buffer *bytes.Buffer, key string, value string) {
 	binary.Write(buffer, binary.LittleEndian, []byte(key))
 	binary.Write(buffer, binary.LittleEndian, []byte(value))
 }
-func Decode(buffer *bytes.Buffer) Record {
+
+func Decode(buffer io.Reader) (Record, error) {
 	keySize := uint64(0)
 	if err := binary.Read(buffer, binary.LittleEndian, &keySize); err != nil {
-		fmt.Println("keySize binary.Read failed:", err)
+		return Record{}, err
 	}
 
 	valueSize := uint64(0)
 	if err := binary.Read(buffer, binary.LittleEndian, &valueSize); err != nil {
-		fmt.Println("valueSize binary.Read failed:", err)
+		return Record{}, err
 	}
 
 	key := make([]byte, keySize)
 	if err := binary.Read(buffer, binary.LittleEndian, &key); err != nil {
-		fmt.Println("key binary.Read failed:", err)
+		return Record{}, err
 	}
 
 	value := make([]byte, valueSize)
 	if err := binary.Read(buffer, binary.LittleEndian, &value); err != nil {
-		fmt.Println("value binary.Read failed:", err)
+		return Record{}, err
 	}
 
 	record := Record{
 		Key:   string(key),
 		Value: string(value),
 	}
-	return record
+	return record, nil
 }

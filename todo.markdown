@@ -1,3 +1,3 @@
 - [x] скопировать на github 
 - [x] заменить write на binary.Write
-- [x] возвращать ошибки в encoding и decode вместо паники
+- [ ] возвращать ошибки в encoding и decode вместо паники
